@@ -1,0 +1,19 @@
+POST http://localhost:1324/todo
+Content-Type: application/json
+
+{
+    "Id": 5,
+    "Message": "jjjjjjjj",
+    "CreateBy": 3
+}
+###
+
+POST http://localhost:1324/login
+Content-Type: application/json
+
+{
+    "email": "naczaaja@hotmail.com"
+}
+###
+
+GET http://localhost:1324/users/readall

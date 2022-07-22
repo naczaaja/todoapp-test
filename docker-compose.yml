@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    volumes:
+      - "./data:/opt/mssql-tools/bin/sqlcmd"
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=N@czaaja2537
+      - MSSQL_PID=Developer
+    ports:
+      - "6543:1433"

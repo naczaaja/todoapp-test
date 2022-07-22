@@ -42,7 +42,9 @@ func main() {
 	todo_authorized := e.Group("/todos", JWTAuthen())
 	user_authorized := e.Group("/users", JWTAuthen())
 	user_authorized.GET("/readall", handler.ReadUsersAll)
+	// user_authorized.GET("/profile", handler.Profile)
 	todo_authorized.GET("/readall", handler.ReadTodosAll)
+	todo_authorized.POST("/create", handler.CreateTodo)
 
 	e.Logger.Fatal(e.Start(":1324"))
 }
@@ -132,4 +134,22 @@ func (h *Handler) ReadTodosAll(c echo.Context) error {
 	var todos = []orm.TodoDB{}
 	h.db.Find(&todos)
 	return c.JSON(http.StatusOK, todos)
+}
+
+func (h *Handler) CreateTodo(c echo.Context) error {
+	userId := c.Get("userId").(float64)
+
+	todo := orm.Todo{}
+	if err := c.Bind(&todo); err != nil {
+		return err
+	}
+	newTodo := orm.TodoDB{
+		Message:  todo.Message,
+		CreateBy: int(userId),
+	}
+	result := h.db.Save(&newTodo)
+	if result.Error != nil {
+		return c.JSON(http.StatusBadRequest, result.RowsAffected)
+	}
+	return c.JSON(http.StatusOK, newTodo)
 }
